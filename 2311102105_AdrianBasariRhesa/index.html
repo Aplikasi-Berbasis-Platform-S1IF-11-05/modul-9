@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Modul 10 - AJAX</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        #hasil-profil {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: none;
+            /* Disembunyikan dulu sebelum tombol diklik */
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Profil Pengguna (AJAX Fetch API)</h2>
+
+    <button class="btn" id="btn-tampil">Tampilkan Profil</button>
+
+    <div id="hasil-profil"></div>
+
+    <script>
+        // 1. Menangkap elemen tombol dan div hasil
+        const tombolTampil = document.getElementById('btn-tampil');
+        const divHasil = document.getElementById('hasil-profil');
+
+        // 2. Menambahkan event listener 'click' pada tombol
+        tombolTampil.addEventListener('click', function () {
+
+            // 3. Menggunakan Fetch API untuk melakukan request AJAX ke data.php
+            fetch('data.php')
+                .then(response => {
+                    // Mengecek apakah request berhasil (status 200 OK)
+                    if (!response.ok) {
+                        throw new Error('Terjadi kesalahan jaringan/server');
+                    }
+                    // Mengubah response text menjadi object JSON JavaScript
+                    return response.json();
+                })
+                .then(data => {
+                    // 4. Menampilkan data ke dalam div sesuai format yang diminta
+                    divHasil.style.display = 'block'; // Memunculkan kotak div
+                    divHasil.innerHTML = `Nama: <strong>${data.nama}</strong> | Pekerjaan: <strong>${data.pekerjaan}</strong> | Lokasi: <strong>${data.lokasi}</strong>`;
+                })
+                .catch(error => {
+                    // Menangani jika terjadi error
+                    console.error('Gagal mengambil data:', error);
+                    divHasil.style.display = 'block';
+                    divHasil.innerHTML = '<span style="color:red;">Gagal memuat profil. Pastikan server berjalan.</span>';
+                });
+
+        });
+    </script>
+
+</body>
+
+</html>
