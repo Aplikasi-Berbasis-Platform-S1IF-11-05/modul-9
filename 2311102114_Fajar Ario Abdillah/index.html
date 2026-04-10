@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praktikum AJAX</title>
+</head>
+
+<body>
+    <h2>Praktikum AJAX</h2>
+
+    <button id="btnProfil">Tampilkan Profil</button>
+
+    <div id="hasil-profil" style="margin-top: 10px;"></div>
+
+    <script>
+        document.getElementById("btnProfil").addEventListener("click", function () {
+            fetch("data.php")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("hasil-profil").innerHTML =
+                        "Nama: " + data.nama +
+                        " | Pekerjaan: " + data.pekerjaan +
+                        " | Lokasi: " + data.lokasi;
+                })
+                .catch(error => {
+                    document.getElementById("hasil-profil").innerHTML =
+                        "Terjadi kesalahan saat mengambil data.";
+                    console.error(error);
+                });
+        });
+    </script>
+</body>
+
+</html>
