@@ -73,26 +73,30 @@
 
 ## 1. AJAX
 
-AJAX (Asynchronous JavaScript and XML) adalah teknik dalam pengembangan web yang memungkinkan pengambilan data dari server tanpa perlu me-refresh halaman. Dengan AJAX, website menjadi lebih cepat, interaktif, dan user-friendly karena proses pertukaran data dilakukan di background.
+AJAX (Asynchronous JavaScript and XML) merupakan teknik dalam pengembangan web yang digunakan untuk mengambil atau mengirim data ke server tanpa perlu melakukan reload halaman secara keseluruhan. Dengan adanya AJAX, proses pertukaran data bisa dilakukan di belakang layar (background), sehingga pengguna tetap bisa berinteraksi dengan halaman tanpa gangguan.
 
+Penggunaan AJAX membuat tampilan website terasa lebih responsif dan cepat. Misalnya, ketika menampilkan data profil atau melakukan pencarian, hasil bisa langsung muncul tanpa harus memuat ulang halaman. Hal ini tentu meningkatkan pengalaman pengguna karena prosesnya jadi lebih efisien dan tidak membuang waktu.
 ---
 
 ## 2. Fetch API
 
-Fetch API merupakan cara modern dalam JavaScript untuk mengambil data dari server secara asynchronous. Dengan menggunakan `fetch()`, data dapat diambil dalam format JSON dan langsung ditampilkan ke halaman web dengan lebih sederhana dibandingkan metode lama.
+Fetch API adalah fitur pada JavaScript yang digunakan untuk mengambil data dari server dengan cara yang lebih modern dibandingkan metode lama seperti XMLHttpRequest. Fetch API bekerja secara asynchronous dengan konsep Promise, sehingga penulisan kode menjadi lebih rapi dan mudah dipahami.
 
+Dengan menggunakan fetch(), kita bisa mengirim request ke server, lalu menerima response dalam bentuk JSON atau format lainnya. Setelah data diterima, data tersebut bisa langsung diolah dan ditampilkan ke halaman web. Karena penggunaannya yang simpel dan fleksibel, Fetch API saat ini lebih sering dipakai dalam pengembangan web modern.
 ---
 
 ## 3. PHP
 
-PHP adalah bahasa pemrograman yang berjalan di sisi server (server-side). Dalam program ini, PHP digunakan untuk menyediakan data dalam bentuk JSON yang nantinya akan diambil oleh JavaScript.
+PHP merupakan bahasa pemrograman yang berjalan di sisi server (server-side scripting). Artinya, semua proses pengolahan data dilakukan di server sebelum hasilnya dikirim ke browser dalam bentuk HTML atau JSON.
 
+Dalam program ini, PHP digunakan sebagai penyedia data sederhana. Data disimpan dalam bentuk array, lalu diubah menjadi format JSON menggunakan fungsi json_encode(). Setelah itu, data dikirim ke client dan ditampilkan menggunakan JavaScript. Dengan cara ini, PHP berperan penting sebagai penghubung antara data dan tampilan.
 ---
 
 ## 4. JSON
 
-JSON (JavaScript Object Notation) adalah format pertukaran data yang ringan dan mudah dibaca. JSON digunakan sebagai penghubung antara server (PHP) dan client (JavaScript).
+JSON (JavaScript Object Notation) adalah format data yang digunakan untuk pertukaran informasi antara server dan client. Struktur JSON terdiri dari pasangan key dan value, sehingga mudah dibaca dan dipahami.
 
+JSON sering digunakan karena ringan dan cepat dalam proses pengiriman data. Dalam konteks AJAX, JSON menjadi format utama karena bisa langsung diproses oleh JavaScript tanpa perlu konversi yang rumit. Oleh karena itu, JSON sangat cocok digunakan untuk aplikasi web yang membutuhkan pertukaran data secara cepat dan efisien.
 ---
 
 # 💻 Tugas 10 — AJAX
@@ -250,11 +254,17 @@ function loadData() {
 
 # 🧠 Penjelasan Program
 
-Program ini terdiri dari dua bagian utama, yaitu server dan client. Pada bagian server, digunakan file PHP (`data.php`) yang berfungsi untuk menyediakan data dalam bentuk array. Data tersebut kemudian diubah menjadi JSON menggunakan `json_encode()` agar dapat dikirim ke client.
+Program ini dibuat dengan dua bagian utama, yaitu server dan client, yang saling terhubung untuk menampilkan data secara dinamis tanpa perlu reload halaman.
 
-Pada bagian client, digunakan HTML dan JavaScript. Ketika tombol diklik, JavaScript akan mengambil data dari server menggunakan Fetch API tanpa perlu reload halaman. Data yang diterima kemudian ditampilkan ke dalam bentuk card agar lebih rapi dan menarik.
+Pada bagian server, digunakan file data.php yang berfungsi sebagai penyedia data. Di dalam file ini, data disimpan dalam bentuk array yang berisi beberapa informasi seperti nama, pekerjaan, dan lokasi. Setelah itu, data tersebut diubah ke format JSON menggunakan fungsi json_encode(). Tujuannya supaya data bisa dikirim dengan format yang ringan dan mudah dibaca oleh JavaScript. Selain itu, ditambahkan juga header('Content-Type: application/json') agar browser mengetahui bahwa data yang dikirim berupa JSON, bukan HTML biasa.
 
-Dengan konsep ini, proses menjadi lebih cepat, interaktif, dan efisien.
+Kemudian pada bagian client, digunakan file index.php yang berisi struktur tampilan (HTML), styling (CSS), dan logika interaksi menggunakan JavaScript. Di halaman ini terdapat tombol yang berfungsi untuk mengambil data dari server. Saat tombol tersebut diklik, JavaScript akan menjalankan fungsi fetch() untuk mengirim request ke file data.php. Proses ini berjalan secara asynchronous, artinya pengambilan data dilakukan di background tanpa mengganggu tampilan halaman.
+
+Setelah data berhasil diambil, response dari server akan dikonversi menjadi format JSON menggunakan .json(). Selanjutnya, data tersebut diproses menggunakan perulangan (loop), sehingga setiap data bisa ditampilkan satu per satu ke dalam halaman. Data ditampilkan dalam bentuk card agar tampilannya lebih rapi, terstruktur, dan enak dilihat.
+
+Dengan konsep seperti ini, proses pertukaran data antara server dan client menjadi lebih efisien karena tidak perlu reload halaman setiap kali mengambil data. Hal ini membuat website terasa lebih cepat dan interaktif. Selain itu, penggunaan Fetch API juga membuat penulisan kode menjadi lebih sederhana dan mudah dipahami dibandingkan metode lama seperti XMLHttpRequest.
+
+Secara keseluruhan, program ini menerapkan konsep AJAX, di mana client mengirim request ke server melalui index.php, kemudian server (data.php) mengirimkan response dalam bentuk JSON, lalu data tersebut langsung ditampilkan ke halaman. Dengan cara ini, website jadi terlihat lebih modern karena bisa menampilkan data secara real-time tanpa reload halaman.
 
 ---
 
@@ -280,4 +290,7 @@ http://localhost/modul-10/index.html
 
 
 # 📸 Output
+
+<img width="1920" height="1080" alt="DataProfilRun" src="https://github.com/user-attachments/assets/f9347308-80cc-47d1-b054-a53cf2c92d4f" />
+
 
