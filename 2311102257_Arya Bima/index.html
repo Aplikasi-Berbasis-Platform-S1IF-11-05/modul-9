@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX Fetching</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Profil Viewer</h1>
+        </div>
+
+        <div class="content">
+            <button class="btn-load" id="loadProfileBtn">
+                🚀 Tampilkan Profil
+            </button>
+
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Mengambil data dari server...</p>
+            </div>
+
+            <div id="hasil-profil" class="profile-card"></div>
+
+            <div class="error-message" id="errorMessage">
+                ⚠️ Gagal mengambil data. Silakan coba lagi.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Data diambil menggunakan AJAX (Fetch API) dari server PHP</p>
+        </div>
+    </div>
+
+    <script>
+        // Mengambil elemen DOM
+        const loadButton = document.getElementById('loadProfileBtn');
+        const hasilProfilDiv = document.getElementById('hasil-profil');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Fungsi untuk menampilkan data profil
+        function displayProfile(data) {
+            hasilProfilDiv.innerHTML = `
+                <div class="profile-item">
+                    <div class="profile-icon">👤</div>
+                    <div class="profile-label">Nama:</div>
+                    <div class="profile-value"><strong>${escapeHtml(data.nama)}</strong></div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">💼</div>
+                    <div class="profile-label">Pekerjaan:</div>
+                    <div class="profile-value">${escapeHtml(data.pekerjaan)}</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">📍</div>
+                    <div class="profile-label">Lokasi:</div>
+                    <div class="profile-value">${escapeHtml(data.lokasi)}</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">📧</div>
+                    <div class="profile-label">Email:</div>
+                    <div class="profile-value">${escapeHtml(data.email)}</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon">🎨</div>
+                    <div class="profile-label">Hobi:</div>
+                    <div class="profile-value">${escapeHtml(data.hobi)}</div>
+                </div>
+            `;
+            hasilProfilDiv.classList.add('show');
+        }
+
+        // Fungsi untuk membersihkan HTML (security)
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Fungsi untuk mengambil data dari server menggunakan Fetch API
+        async function fetchProfile() {
+            // Reset tampilan
+            hasilProfilDiv.classList.remove('show');
+            errorMessage.classList.remove('show');
+            
+            // Tampilkan loading
+            loadingIndicator.classList.add('show');
+            loadButton.disabled = true;
+            loadButton.textContent = '⏳ Mengambil Data...';
+
+            try {
+                // Mengambil data dari server
+                const response = await fetch('data.php', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                // Cek apakah response OK
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Parse JSON response
+                const data = await response.json();
+
+                // Cek apakah data valid
+                if (data && data.nama) {
+                    // Tampilkan data
+                    displayProfile(data);
+                } else {
+                    throw new Error('Data tidak lengkap');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                // Tampilkan pesan error
+                errorMessage.classList.add('show');
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 3000);
+            } finally {
+                // Sembunyikan loading
+                loadingIndicator.classList.remove('show');
+                loadButton.disabled = false;
+                loadButton.textContent = '🚀 Tampilkan Profil';
+            }
+        }
+
+        // Event listener untuk tombol
+        loadButton.addEventListener('click', fetchProfile);
+
+    </script>
+</body>
+</html>
