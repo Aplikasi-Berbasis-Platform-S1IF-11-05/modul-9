@@ -33,43 +33,8 @@
 
 <hr>
 
-<div align="center">
-  <br />
-  <h1>LAPORAN PRAKTIKUM <br> APLIKASI BERBASIS PLATFORM </h1>
-
-  <h3>MODUL 10 <br> AJAX</h3>
-
-  <img width="200" src="https://github.com/user-attachments/assets/724a3291-bcf9-448d-a395-3886a8659d79" />
-
-<br /><br />
-
-  <h3>Disusun Oleh :</h3>
-  <p>
-    <strong>Arsya Fathiha Rahman</strong><br>
-    <strong>2311102152</strong><br>
-    <strong>S1 IF-11-REG05</strong>
-  </p>
-
-  <h3>Dosen Pengampu :</h3>
-  <p><strong>Dedi Agung Prabowo, S.Kom., M.Kom</strong></p>
-
-  <h4>Asisten Praktikum :</h4>
-  <p>
-    Apri Pandu Wicaksono<br>
-    Hamka Zaenul Ardi
-  </p>
-
-  <h3>
-    LABORATORIUM HIGH PERFORMANCE <br>
-    FAKULTAS INFORMATIKA <br>
-    UNIVERSITAS TELKOM PURWOKERTO <br>
-    2026
-  </h3>
-</div>
-
 ---
 
-# 📚 Dasar Teori
 
 # 📚 Dasar Teori
 
