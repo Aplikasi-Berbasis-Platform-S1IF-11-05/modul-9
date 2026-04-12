@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul 10 - Ajax</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 48px 40px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+        }
+
+        .card h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #a78bfa, #818cf8, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card p.subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 32px;
+        }
+
+        #btn-profil {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+        }
+
+        #btn-profil:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(99, 102, 241, 0.55);
+            background: linear-gradient(135deg, #818cf8, #a78bfa);
+        }
+
+        #btn-profil:active {
+            transform: translateY(0);
+        }
+
+        #btn-profil .icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        #btn-profil:hover .icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        /* Hasil profil */
+        #hasil-profil {
+            margin-top: 32px;
+            min-height: 0;
+            transition: all 0.4s ease;
+        }
+
+        .profil-box {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 14px;
+            padding: 24px 28px;
+            text-align: left;
+            animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .profil-box .profil-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+        }
+
+        .profil-box .profil-row:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .profil-box .profil-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .profil-box .profil-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.45);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profil-box .profil-value {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #f0f0ff;
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 0;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-top-color: #818cf8;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        /* Error state */
+        .error-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 14px;
+            padding: 20px 24px;
+            color: #fca5a5;
+            font-size: 0.9rem;
+            animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>📡 Ajax Profil Viewer</h1>
+        <p class="subtitle">Modul 10 — Mengambil data dari server tanpa reload</p>
+
+        <button id="btn-profil">
+            <span class="icon">👤</span>
+            Tampilkan Profil
+        </button>
+
+        <div id="hasil-profil"></div>
+    </div>
+
+    <script>
+        document.getElementById('btn-profil').addEventListener('click', function () {
+            const hasilDiv = document.getElementById('hasil-profil');
+
+            // Tampilkan loading
+            hasilDiv.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Memuat data...
+                </div>
+            `;
+
+            // Fetch data dari data.php menggunakan AJAX (fetch API)
+            fetch('data.php')
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP error ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    // Tampilkan data ke dalam div hasil-profil
+                    hasilDiv.innerHTML = `
+                        <div class="profil-box">
+                            <div class="profil-row">
+                                <div class="profil-icon">👤</div>
+                                <div>
+                                    <div class="profil-label">Nama</div>
+                                    <div class="profil-value">${data.nama}</div>
+                                </div>
+                            </div>
+                            <div class="profil-row">
+                                <div class="profil-icon">💼</div>
+                                <div>
+                                    <div class="profil-label">Pekerjaan</div>
+                                    <div class="profil-value">${data.pekerjaan}</div>
+                                </div>
+                            </div>
+                            <div class="profil-row">
+                                <div class="profil-icon">📍</div>
+                                <div>
+                                    <div class="profil-label">Lokasi</div>
+                                    <div class="profil-value">${data.lokasi}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                })
+                .catch(function (error) {
+                    hasilDiv.innerHTML = `
+                        <div class="error-box">
+                            ⚠️ Gagal memuat data: ${error.message}
+                        </div>
+                    `;
+                });
+        });
+    </script>
+
+</body>
+</html>
