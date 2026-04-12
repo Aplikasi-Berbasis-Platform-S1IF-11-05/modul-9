@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modul 10 - AJAX</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f2ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            width: 420px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 20px 10px 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 22px;
+            color: #6f63e6;
+        }
+
+        .content {
+            padding: 15px 20px 20px 20px;
+        }
+
+        button {
+            width: 100%;
+            background: #8b7cf6;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #7a6de0;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        .result-title {
+            background: #8b7cf6;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .profile-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .profile-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .value {
+            color: #222;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: #aaa;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="header">Data Profil</div>
+
+    <div class="content">
+        <button id="btnProfil">Tampilkan Profil</button>
+
+        <div id="hasil-profil">
+            <div class="placeholder">Klik tombol untuk menampilkan data</div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+
+    $("#btnProfil").click(function() {
+
+        $.ajax({
+            url: "data.php",
+            type: "GET",
+            dataType: "json",
+
+            success: function(data) {
+                $("#hasil-profil").html(
+                    "<div class='result-box'>" +
+
+                        "<div class='result-title'>Hasil Profil</div>" +
+
+                        "<div class='profile-item'>" +
+                            "<div class='label'>Nama</div>" +
+                            "<div class='value'>" + data.nama + "</div>" +
+                        "</div>" +
+
+                        "<div class='profile-item'>" +
+                            "<div class='label'>Pekerjaan</div>" +
+                            "<div class='value'>" + data.pekerjaan + "</div>" +
+                        "</div>" +
+
+                        "<div class='profile-item'>" +
+                            "<div class='label'>Lokasi</div>" +
+                            "<div class='value'>" + data.lokasi + "</div>" +
+                        "</div>" +
+
+                    "</div>"
+                );
+            },
+
+            error: function(xhr, status, error) {
+                $("#hasil-profil").html(
+                    "<p style='color:red; text-align:center;'>Error: " + error + "</p>"
+                );
+            }
+
+        });
+
+    });
+
+});
+</script>
+
+</body>
+</html>
