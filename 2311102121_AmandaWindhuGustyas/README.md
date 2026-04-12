@@ -201,4 +201,4 @@ Output:
 # Penjelasan
 Kode AJAX pada program ini menggunakan fungsi ambilData() yang dijalankan saat tombol diklik. Fungsi tersebut memanfaatkan Fetch API untuk mengambil data dari data.php secara asynchronous tanpa melakukan reload halaman. Data yang diterima kemudian diubah ke format JSON dan diproses menggunakan perulangan untuk menampilkan setiap informasi profil seperti nama, pekerjaan, dan lokasi ke dalam elemen HTML secara dinamis. Hasilnya ditampilkan pada halaman menggunakan innerHTML.
 
-Di sisi server, file data.php menyediakan data dalam bentuk array yang kemudian diubah menjadi JSON menggunakan json_encode() dan dikirim ke client. Dengan demikian, program ini menerapkan konsep AJAX yang memungkinkan pertukaran data antara client dan server secara e
+Di sisi server, file data.php menyediakan data dalam bentuk array yang kemudian diubah menjadi JSON menggunakan json_encode() dan dikirim ke client. Dengan demikian, program ini menerapkan konsep AJAX yang memungkinkan pertukaran data antara client dan server secara efisien tanpa memuat ulang halaman, sehingga meningkatkan interaktivitas aplikasi web.
