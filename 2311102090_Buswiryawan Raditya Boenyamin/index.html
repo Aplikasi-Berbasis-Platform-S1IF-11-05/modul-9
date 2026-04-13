@@ -4,224 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modul 10 — AJAX Profil</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
-
-        :root {
-            --bg:      #0d0f14;
-            --surface: #161a23;
-            --border:  #252a38;
-            --accent:  #4f8ef7;
-            --accent2: #a78bfa;
-            --green:   #34d399;
-            --text:    #e2e8f0;
-            --muted:   #64748b;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Sora', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-
-        .container { max-width: 680px; width: 100%; }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        header .label {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-
-        header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #e2e8f0 30%, var(--accent2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        header p { color: var(--muted); font-size: 0.88rem; margin-top: 8px; }
-
-        /* Button */
-        .btn-container { text-align: center; margin-bottom: 32px; }
-
-        #btn-tampilkan {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 14px 36px;
-            border-radius: 10px;
-            font-family: 'Sora', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            letter-spacing: 0.3px;
-        }
-
-        #btn-tampilkan:hover {
-            background: #6ba3f9;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(79,142,247,0.3);
-        }
-
-        #btn-tampilkan:active { transform: translateY(0); }
-
-        #btn-tampilkan:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Loading spinner */
-        .loading {
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.85rem;
-            padding: 20px;
-            display: none;
-        }
-
-        .loading::before {
-            content: '';
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Error */
-        .error-msg {
-            background: rgba(248,113,113,0.1);
-            border: 1px solid rgba(248,113,113,0.3);
-            color: #f87171;
-            padding: 14px 18px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            display: none;
-            margin-bottom: 16px;
-        }
-
-        /* Profil cards */
-        #hasil-profil {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .profil-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px 22px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            opacity: 0;
-            transform: translateY(12px);
-            animation: fadeUp 0.35s forwards;
-        }
-
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-            flex-shrink: 0;
-            color: #fff;
-        }
-
-        .profil-info { flex: 1; }
-
-        .profil-nama {
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-        }
-
-        .profil-detail {
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .profil-detail span { color: var(--text); }
-
-        /* Format teks sesuai spesifikasi tugas */
-        .profil-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--muted);
-            margin-top: 6px;
-            padding: 6px 10px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 6px;
-        }
-
-        .profil-text strong { color: var(--accent); }
-
-        .code-note {
-            margin-top: 32px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-            border-radius: 10px;
-            padding: 16px 20px;
-        }
-
-        .code-note .note-title {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-
-        .code-note pre {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--muted);
-            white-space: pre-wrap;
-            line-height: 1.7;
-        }
-
-        .code-note pre .kw  { color: var(--accent2); }
-        .code-note pre .fn  { color: var(--accent); }
-        .code-note pre .str { color: var(--green); }
-    </style>
+    <title>Modul 10 — AJAX</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
@@ -229,7 +13,7 @@
     <header>
         <div class="label"></div>
         <h1>Data Profil via AJAX</h1>
-        <p>Ambil data dari server tanpa reload halaman menggunakan <code style="color:var(--accent)">fetch()</code></p>
+        <p>Ambil data dari server tanpa reload halaman menggunakan <code>fetch()</code></p>
     </header>
 
     <div class="btn-container">
@@ -241,7 +25,7 @@
 
     <div id="hasil-profil"></div>
 
-    <div class="code-note" style="margin-top: 32px">
+    <div class="code-note">
         <div class="note-title">Cara Kerja AJAX (fetch)</div>
         <pre>
 <span class="kw">document</span>.<span class="fn">getElementById</span>(<span class="str">'btn-tampilkan'</span>)
@@ -251,7 +35,6 @@
   <span class="kw">const</span> data     = <span class="kw">await</span> response.<span class="fn">json</span>();
 
   data.<span class="fn">forEach</span>(profil => {
-    <span class="kw">// Tampilkan ke DOM tanpa reload halaman</span>
     hasil.<span class="fn">innerHTML</span> += <span class="str">`Nama: ${profil.nama}...`</span>;
   });
 });</pre>
@@ -259,77 +42,6 @@
 
 </div>
 
-<script>
-
-    const btn      = document.getElementById('btn-tampilkan');
-    const hasil    = document.getElementById('hasil-profil');
-    const loading  = document.getElementById('loading');
-    const errorMsg = document.getElementById('error-msg');
-
-    btn.addEventListener('click', async () => {
-        hasil.innerHTML   = '';
-        errorMsg.style.display  = 'none';
-        loading.style.display   = 'block';
-        btn.disabled = true;
-        btn.textContent = 'Memuat...';
-
-        try {
-            const response = await fetch('data.php');
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            tampilkanProfil(data);
-
-        } catch (err) {
-            console.warn('Fetch gagal, menggunakan data demo:', err.message);
-
-            const dataDemoJson = [
-                { nama: 'Budi',   pekerjaan: 'Web Developer',   lokasi: 'Jakarta' },
-                { nama: 'Sari',   pekerjaan: 'UI/UX Designer',  lokasi: 'Bandung' },
-                { nama: 'Rizky',  pekerjaan: 'Data Analyst',    lokasi: 'Surabaya' },
-                { nama: 'Dewi',   pekerjaan: 'Backend Engineer', lokasi: 'Yogyakarta' },
-                { nama: 'Farhan', pekerjaan: 'Mobile Developer', lokasi: 'Medan' },
-            ];
-
-            tampilkanProfil(dataDemoJson);
-        } finally {
-            loading.style.display = 'none';
-            btn.disabled = false;
-            btn.textContent = 'Muat Ulang';
-        }
-    });
-
-    function tampilkanProfil(data) {
-        data.forEach((profil, index) => {
-            const card = document.createElement('div');
-            card.className = 'profil-card';
-            card.style.animationDelay = `${index * 80}ms`;
-
-            const inisial = profil.nama.charAt(0).toUpperCase();
-
-            const formatTeks = `Nama: ${profil.nama} | Pekerjaan: ${profil.pekerjaan} | Lokasi: ${profil.lokasi}`;
-
-            card.innerHTML = `
-                <div class="avatar">${inisial}</div>
-                <div class="profil-info">
-                    <div class="profil-nama">${profil.nama}</div>
-                    <div class="profil-detail">
-                        💼 <span>${profil.pekerjaan}</span>
-                        &nbsp;&nbsp;📍 <span>${profil.lokasi}</span>
-                    </div>
-                    <div class="profil-text">
-                        <strong>OUTPUT:</strong> ${formatTeks}
-                    </div>
-                </div>
-            `;
-
-            hasil.appendChild(card);
-        });
-    }
-</script>
+<script src="script.js"></script>
 </body>
 </html>

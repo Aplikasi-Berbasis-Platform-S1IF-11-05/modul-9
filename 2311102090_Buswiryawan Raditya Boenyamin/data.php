@@ -1,6 +1,5 @@
 <?php
 // 2311102090_Buswiryawan Raditya Boenyamin_S1IF-11-05
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *'); 
 
