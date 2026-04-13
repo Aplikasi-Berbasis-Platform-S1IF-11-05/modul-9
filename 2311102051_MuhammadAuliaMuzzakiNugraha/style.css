@@ -1,0 +1,136 @@
+:root {
+  --bg-main: #07162d;
+  --surface: #112e55;
+  --line: rgba(152, 182, 216, 0.26);
+  --text: #ebf4ff;
+  --muted: #a7bdd7;
+  --brand: #f4263e;
+  --shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background-color: var(--bg-main);
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(34, 76, 130, 0.38), transparent 44%),
+    radial-gradient(rgba(228, 57, 79, 0.14) 1px, transparent 1px),
+    linear-gradient(180deg, #07162d 0%, #061428 100%);
+  background-size:
+    auto,
+    24px 24px,
+    auto;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.panel {
+  width: min(560px, 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(17, 46, 85, 0.95),
+    rgba(12, 35, 68, 0.95)
+  );
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  animation: rise-in 0.5s ease both;
+}
+
+.panel h1 {
+  margin: 0;
+  text-align: center;
+  color: var(--brand);
+  font-size: 34px;
+}
+
+.btn-profil {
+  margin-top: 18px;
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  min-height: 46px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--brand), #de1d35);
+  box-shadow: 0 10px 24px rgba(244, 38, 62, 0.3);
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.btn-profil:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.btn-profil:disabled {
+  cursor: progress;
+  opacity: 0.75;
+  transform: none;
+}
+
+.result-box {
+  margin-top: 14px;
+  min-height: 58px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px dashed rgba(138, 172, 210, 0.56);
+  background: rgba(9, 25, 49, 0.62);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.result-box.loading {
+  color: #dbe9fa;
+}
+
+.result-box.success {
+  border-color: rgba(126, 211, 160, 0.86);
+  background: rgba(20, 65, 54, 0.55);
+}
+
+.result-box.error {
+  border-color: rgba(255, 114, 136, 0.84);
+  background: rgba(85, 24, 35, 0.54);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 14px;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+
+  .panel h1 {
+    font-size: 30px;
+  }
+}

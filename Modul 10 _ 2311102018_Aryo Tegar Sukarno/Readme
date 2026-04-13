@@ -1,0 +1,74 @@
+<div align="center">
+    <br />
+    <h1>LAPORAN PRAKTIKUM <br> APLIKASI BERBASIS PLATFORM </h1>
+    <br />
+    <h3>MODUL 9 <br> AJAX </h3>
+    <br />
+    <img width="512" height="512" alt="telyu" src="https://github.com/user-attachments/assets/724a3291-bcf9-448d-a395-3886a8659d79" />
+    <br />
+    <br />
+    <br />
+    <h3>Disusun Oleh :</h3>
+    <p>
+        <strong>ARYO TEGAR SUKARNO</strong>
+        <br>
+        <strong>2311102018</strong>
+        <br>
+        <strong>S1 IF-11-REG05</strong>
+    </p>
+    <br />
+    <h3>Dosen Pengampu :</h3>
+    <p>
+        <strong>Dedi Agung Prabowo, S.Kom., M.Kom</strong>
+    </p>
+    <br />
+    <br />
+    <h4>Asisten Praktikum :</h4>
+    <strong>Apri Pandu Wicaksono </strong>
+    <br>
+    <strong>Hamka Zaenul Ardi</strong>
+    <br />
+    <h3>LABORATORIUM HIGH PERFORMANCE <br>FAKULTAS INFORMATIKA <br>UNIVERSITAS TELKOM PURWOKERTO <br>2026 </h3>
+</div>
+<hr>
+
+## Dasar Teori
+
+AJAX (Asynchronous JavaScript and XML) adalah teknik dalam pengembangan web yang digunakan untuk mengambil dan mengirim data ke server secara asynchronous tanpa perlu melakukan reload seluruh halaman web.
+
+Teknologi ini memungkinkan halaman web menjadi lebih interaktif, cepat, dan responsif, karena hanya sebagian konten halaman yang diperbarui.
+
+AJAX bukanlah bahasa pemrograman baru, melainkan kombinasi beberapa teknologi web yang bekerja bersama.
+
+## Tugas Modul 9 - PHP: Buat Sistem Penilaian Mahasiswa
+
+### Source Code
+
+<?php
+header('Content-Type: application/json');
+
+// Data profil yang lebih lengkap (simulasi database)
+$data = [
+    'nama' => 'Budi Santoso',
+    'pekerjaan' => 'Web Developer Senior',
+    'lokasi' => 'Jakarta, Indonesia',
+    'email' => 'budi.santoso@example.com',
+    'bio' => 'Suka membangun aplikasi web interaktif dengan JavaScript & PHP. Memiliki pengalaman lebih dari 6 tahun di bidang front-end dan back-end. Open untuk kolaborasi!'
+];
+
+// Bisa juga menambahkan data lain seperti website, no telepon dll jika ingin
+// $data['telepon'] = '+62 812 3456 7890';
+
+// Mengembalikan data dalam format JSON
+echo json_encode($data, JSON_PRETTY_PRINT);
+?>
+
+KODE LENGKAP = index.html
+
+### Penjelasan
+
+Pertukaran data antara client dan server secara asynchronous tanpa perlu melakukan reload seluruh halaman web. AJAX bekerja dengan memanfaatkan kombinasi teknologi seperti HTML dan CSS untuk tampilan halaman, JavaScript sebagai pengirim dan pengolah request, DOM (Document Object Model) untuk memperbarui isi halaman secara dinamis, serta format pertukaran data seperti JSON atau XML. Ketika pengguna melakukan suatu aksi, misalnya menekan tombol, JavaScript akan mengirim permintaan ke server di latar belakang menggunakan metode seperti fetch() atau XMLHttpRequest, kemudian server memproses permintaan tersebut dan mengirimkan data kembali ke browser. Data yang diterima selanjutnya ditampilkan pada halaman web secara langsung tanpa memuat ulang halaman, sehingga aplikasi web menjadi lebih cepat, interaktif, responsif, serta meningkatkan pengalaman pengguna dalam berinteraksi dengan sistem berbasis web.
+
+## DOKUMENTASI
+
+![alt text](SSAN-1.jpeg)
