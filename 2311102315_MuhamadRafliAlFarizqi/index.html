@@ -1,0 +1,78 @@
+<!-- Tugas Modul 10 - AJAX -->
+<!-- Nama : Muhamad Rafli Al Farizqi -->
+<!-- NIM  : 2311102315 -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Modul 10 - AJAX</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #hasil-profil {
+            margin-top: 20px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tugas Modul 10 - AJAX</h1>
+        <button id="btn-profil">Tampilkan Profil</button>
+        <div id="hasil-profil"></div>
+    </div>
+
+    <script>
+        document.getElementById('btn-profil').addEventListener('click', function () {
+            fetch('data.php')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    document.getElementById('hasil-profil').innerHTML =
+                        'Nama: ' + data.nama +
+                        ' | Pekerjaan: ' + data.pekerjaan +
+                        ' | Lokasi: ' + data.lokasi;
+                })
+                .catch(function (error) {
+                    document.getElementById('hasil-profil').innerHTML =
+                        'Gagal mengambil data: ' + error.message;
+                });
+        });
+    </script>
+</body>
+</html>
