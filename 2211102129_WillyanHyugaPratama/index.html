@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ProfilSync | Pengambilan Data Real-time</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* Container utama – sentral, lebar terbatas untuk kenyamanan baca */
+        .app-container {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Kartu utama */
+        .card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: box-shadow 0.2s ease;
+        }
+
+        /* Header kartu */
+        .card-header {
+            padding: 1.75rem 1.75rem 0.75rem 1.75rem;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #eef2ff;
+            color: #2563eb;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            letter-spacing: 0.3px;
+            margin-bottom: 1rem;
+        }
+
+        .card-header h1 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-header .subhead {
+            color: #475569;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Body kartu */
+        .card-body {
+            padding: 1.5rem 1.75rem;
+        }
+
+        /* Tombol aksi utama – jelas, aksesibel */
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            width: 100%;
+            background: #0f172a;
+            border: none;
+            padding: 0.85rem 1.2rem;
+            border-radius: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+        }
+
+        .btn-primary:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        /* Area hasil data */
+        .result-area {
+            margin-top: 1.8rem;
+        }
+
+        /* Profil card (setelah data berhasil dimuat) */
+        .profile-card {
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .profile-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid #e9edf2;
+        }
+
+        .profile-item:last-child {
+            border-bottom: none;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-size: 1.2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .profile-content {
+            flex: 1;
+        }
+
+        .profile-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #5b6e8c;
+            margin-bottom: 0.2rem;
+        }
+
+        .profile-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #0f172a;
+            word-break: break-word;
+        }
+
+        .timestamp {
+            margin-top: 0.75rem;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-align: right;
+            border-top: 1px solid #eef2f6;
+            padding-top: 0.75rem;
+        }
+
+        /* Loading state */
+        .loading-state {
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 0.8rem auto;
+        }
+
+        .loading-state p {
+            color: #475569;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Error state */
+        .error-state {
+            background: #fef2f2;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+
+        .error-icon {
+            font-size: 1.3rem;
+        }
+
+        .error-state strong {
+            font-weight: 600;
+        }
+
+        /* Empty state */
+        .empty-state {
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            padding: 2rem;
+            text-align: center;
+            border: 1px dashed #cbd5e1;
+            color: #5b6e8c;
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+        }
+
+        /* Footer kecil */
+        .footer-note {
+            margin-top: 1.2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsif */
+        @media (max-width: 500px) {
+            body { padding: 1rem; }
+            .card-header { padding: 1.25rem 1.25rem 0.5rem 1.25rem; }
+            .card-body { padding: 1.25rem; }
+            .profile-item { gap: 0.75rem; padding: 0.85rem 1rem; }
+            .profile-icon { width: 34px; height: 34px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="card">
+        <div class="card-header">
+            <div class="badge">
+                <i class="fas fa-sync-alt"></i> ASYNC FETCH
+            </div>
+            <h1>ProfilSync</h1>
+            <div class="subhead">Ambil data profil secara langsung dari server tanpa memuat ulang halaman.</div>
+        </div>
+        <div class="card-body">
+            <button id="fetchDataBtn" class="btn-primary">
+                <i class="fas fa-cloud-download-alt"></i> Ambil Data Profil
+            </button>
+
+            <div id="resultContainer" class="result-area">
+                <!-- State awal: kosong dengan informasi ringan -->
+                <div class="empty-state">
+                    <i class="fas fa-user-circle"></i>
+                    <p>Belum ada data</p>
+                    <small>Klik tombol di atas untuk memuat profil</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-note">
+        <i class="fas fa-database"></i> Data diambil menggunakan Fetch API • Response JSON
+    </div>
+</div>
+
+<script>
+    const fetchButton = document.getElementById('fetchDataBtn');
+    const resultContainer = document.getElementById('resultContainer');
+
+    // Fungsi untuk menampilkan loading
+    function showLoading() {
+        resultContainer.innerHTML = `
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Mengambil data dari server...</p>
+            </div>
+        `;
+    }
+
+    // Fungsi untuk menampilkan error
+    function showError(message) {
+        resultContainer.innerHTML = `
+            <div class="error-state">
+                <div class="error-icon">⚠️</div>
+                <div>
+                    <strong>Gagal memuat data</strong><br>
+                    <span style="font-size:0.8rem;">${escapeHtml(message)}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    // Fungsi untuk menampilkan data profil yang berhasil
+    function renderProfile(profile) {
+        const now = new Date();
+        const formattedTime = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+        resultContainer.innerHTML = `
+            <div class="profile-card">
+                <div class="profile-item">
+                    <div class="profile-icon"><i class="fas fa-user"></i></div>
+                    <div class="profile-content">
+                        <div class="profile-label">Nama Lengkap</div>
+                        <div class="profile-value">${escapeHtml(profile.nama)}</div>
+                    </div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="profile-content">
+                        <div class="profile-label">Pekerjaan / Peran</div>
+                        <div class="profile-value">${escapeHtml(profile.pekerjaan)}</div>
+                    </div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="profile-content">
+                        <div class="profile-label">Lokasi</div>
+                        <div class="profile-value">${escapeHtml(profile.lokasi)}</div>
+                    </div>
+                </div>
+                <div class="timestamp">
+                    <i class="far fa-clock"></i> Terakhir disinkronkan: ${formattedTime}
+                </div>
+            </div>
+        `;
+    }
+
+    // Simple XSS protection
+    function escapeHtml(str) {
+        if (!str) return '—';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // Event listener dengan async/await
+    fetchButton.addEventListener('click', async () => {
+        showLoading();
+
+        try {
+            const response = await fetch('data.php', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Cache-Control': 'no-cache'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server merespon dengan status ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Validasi data yang diterima
+            if (!data.nama || !data.pekerjaan || !data.lokasi) {
+                throw new Error('Data yang diterima tidak lengkap (nama, pekerjaan, lokasi wajib ada).');
+            }
+
+            renderProfile(data);
+
+        } catch (err) {
+            console.error('Fetch error:', err);
+            showError(err.message);
+        }
+    });
+</script>
+</body>
+</html>
