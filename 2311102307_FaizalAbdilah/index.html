@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX Profil Mahasiswa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Data Profil</h1>
+        
+        <button onclick="ambilData()">Tampilkan Profil</button>
+
+        <div id="hasil-profil"></div>
+    </div>
+
+    <script>
+        function ambilData() {
+            fetch('data.php')
+                .then(response => response.json())
+                .then(data => {
+                    let output = "";
+
+                    data.forEach(item => {
+                        output += `
+                            <div class="card">
+                                Nama: ${item.nama} <br>
+                                Pekerjaan: ${item.pekerjaan} <br>
+                                Lokasi: ${item.lokasi}
+                            </div>
+                        `;
+                    });
+
+                    document.getElementById("hasil-profil").innerHTML = output;
+                })
+                .catch(error => {
+                    console.log("Error:", error);
+                });
+        }
+    </script>
+
+</body>
+</html>
