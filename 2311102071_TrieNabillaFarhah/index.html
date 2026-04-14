@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Profil AJAX</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #17152d, #398084);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            background: rgb(201, 239, 254);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #5b8fbc;
+            color: rgb(255, 255, 255);
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #007bff;
+            transform: scale(1.05);
+        }
+
+        #hasil-profil {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #c6e2ee;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Data Profil</h2>
+
+        <button id="btnTampil">Tampilkan Profil</button>
+
+        <div id="hasil-profil"></div>
+    </div>
+
+    <script>
+        const tombol = document.getElementById("btnTampil");
+
+        tombol.addEventListener("click", function () {
+            fetch("data.php")
+                .then(response => response.json())
+                .then(data => {
+                    const hasil = document.getElementById("hasil-profil");
+
+                    hasil.style.display = "block";
+                    hasil.innerHTML = `
+                        <p><span class="label">Nama:</span> ${data.nama}</p>
+                        <p><span class="label">Pekerjaan:</span> ${data.pekerjaan}</p>
+                        <p><span class="label">Lokasi:</span> ${data.lokasi}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        });
+    </script>
+
+</body>
+
+</html>
