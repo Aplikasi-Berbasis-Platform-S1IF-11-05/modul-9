@@ -1,0 +1,63 @@
+<!-- 2311102100-Verdi Pangestu -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul 10 - Implementasi AJAX</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        #hasil-profil { 
+            margin-top: 15px; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            display: inline-block;
+            min-width: 300px;
+        }
+        button { cursor: pointer; padding: 8px 16px; }
+    </style>
+</head>
+<body>
+
+    <h2>Data Profil Pengguna</h2>
+    
+    <button id="btn-tampilkan">Tampilkan Profil</button>
+
+    <div id="hasil-profil">
+        <i>Data akan muncul di sini...</i>
+    </div>
+
+    <script>
+        // Mengambil elemen dari DOM
+        const tombol = document.getElementById('btn-tampilkan');
+        const wadahHasil = document.getElementById('hasil-profil');
+
+        // Menambahkan event listener klik pada tombol
+        tombol.addEventListener('click', function() {
+            // Mengambil data dari server menggunakan fetch
+            fetch('data.php')
+                .then(response => {
+                    // Cek apakah request berhasil
+                    if (!response.ok) {
+                        throw new Error('Gagal mengambil data');
+                    }
+                    return response.json(); // Mengubah response menjadi objek JSON
+                })
+                .then(data => {
+                    // Menampilkan data ke dalam div dengan format yang diminta
+                    wadahHasil.innerHTML = `
+                        <strong>Nama:</strong> ${data.nama} | 
+                        <strong>Pekerjaan:</strong> ${data.pekerjaan} | 
+                        <strong>Lokasi:</strong> ${data.lokasi}
+                    `;
+                })
+                .catch(error => {
+                    // Menangani error jika terjadi masalah
+                    console.error('Error:', error);
+                    wadahHasil.innerHTML = "Gagal memuat data.";
+                });
+        });
+    </script>
+
+</body>
+</html>
