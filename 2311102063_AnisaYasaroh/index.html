@@ -1,0 +1,86 @@
+<!-- 2311102063
+Anisa Yasaroh
+IF-11-REG05 -->
+
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Profil</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .box {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 450px;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background: darkblue;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: black;
+    }
+
+    #hasil-profil {
+      margin-top: 20px;
+      font-size: 14px;
+      white-space: nowrap;
+      /* tetap 1 baris */
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+    <h2>Data Profil</h2>
+
+    <button onclick="tampilkanProfil()">Tampilkan Profil</button>
+
+    <div id="hasil-profil"></div>
+  </div>
+
+  <script>
+    function tampilkanProfil() {
+      fetch('data.php')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("hasil-profil").innerHTML =
+            "Nama: " + data.nama +
+            " | Pekerjaan: " + data.pekerjaan +
+            " | Lokasi: " + data.lokasi;
+        })
+        .catch(error => {
+          document.getElementById("hasil-profil").innerHTML = "Error mengambil data";
+        });
+    }
+  </script>
+
+</body>
+
+</html>
