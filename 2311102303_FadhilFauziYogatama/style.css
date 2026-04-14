@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+.main {
+    width: 70%;
+    margin: 50px auto;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #38bdf8;
+}
+
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    background: #22c55e;
+    color: #0f172a;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #4ade80;
+    transform: scale(1.1);
+}
+
+#list-user {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.card-neon {
+    padding: 20px;
+    border-radius: 15px;
+    background: #1e293b;
+    box-shadow: 0 0 10px #38bdf8, 0 0 20px #22c55e;
+    transition: 0.3s;
+}
+
+.card-neon:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px #38bdf8, 0 0 40px #22c55e;
+}
+
+.card-neon h3 {
+    margin: 0;
+    color: #22c55e;
+}
+
+.card-neon p {
+    margin: 10px 0;
+}
+
+.card-neon small {
+    color: #94a3b8;
+}

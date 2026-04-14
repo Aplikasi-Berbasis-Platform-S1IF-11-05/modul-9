@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard User</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="main">
+        <h1>🚀 Dashboard User</h1>
+
+        <button onclick="getUser()">Load Data User</button>
+
+        <section id="list-user"></section>
+    </div>
+
+    <script>
+        function getUser() {
+            fetch('api_user.php')
+                .then(response => response.json())
+                .then(data => {
+                    let isi = "";
+
+                    data.map(u => {
+                        isi += `
+                            <div class="card-neon">
+                                <h3>${u.nama}</h3>
+                                <p>${u.pekerjaan}</p>
+                                <small>${u.lokasi}</small>
+                            </div>
+                        `;
+                    });
+
+                    document.getElementById("list-user").innerHTML = isi;
+                })
+                .catch(e => console.log("Gagal:", e));
+        }
+    </script>
+
+</body>
+</html>
