@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncData | Asynchronous Profile Explorer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', monospace;
+            background: #0c1117;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Layout utama: horizontal split */
+        .split-dashboard {
+            max-width: 1300px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 1.8rem;
+            background: transparent;
+        }
+
+        /* Panel kiri - command center */
+        .command-panel {
+            background: rgba(18, 25, 35, 0.92);
+            backdrop-filter: blur(2px);
+            border: 1px solid #2a3a44;
+            border-radius: 2rem;
+            padding: 2rem;
+            height: fit-content;
+        }
+
+        .badge-system {
+            display: inline-block;
+            background: #1e3a3f;
+            color: #6ee7b7;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.3rem 0.9rem;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #2e5a5f;
+        }
+
+        .command-panel h2 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: #ecfdf5;
+            letter-spacing: -1px;
+            margin-bottom: 0.75rem;
+        }
+
+        .command-desc {
+            color: #8aa4b5;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            border-left: 3px solid #2e7d64;
+            padding-left: 1rem;
+        }
+
+        /* Tombol unik - style terminal */
+        .terminal-btn {
+            width: 100%;
+            background: #111a20;
+            border: 1.5px solid #2e5a5f;
+            padding: 1rem 1.2rem;
+            border-radius: 1rem;
+            color: #b9f6e4;
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 2rem;
+        }
+
+        .terminal-btn:hover {
+            background: #1e3a3f;
+            border-color: #6ee7b7;
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+        }
+
+        /* stats ringkas */
+        .info-stats {
+            background: #0f171e;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid #1e2f38;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            padding: 0.5rem 0;
+            color: #7e9eb0;
+        }
+
+        .stat-label {
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #6ee7b7;
+            font-family: monospace;
+        }
+
+        /* Panel kanan - hasil dengan layout timeline / feed */
+        .result-panel {
+            background: #0f171e;
+            border: 1px solid #1f313a;
+            border-radius: 2rem;
+            padding: 1.8rem;
+            min-height: 480px;
+            transition: all 0.2s;
+        }
+
+        .panel-header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            border-bottom: 1px solid #1f313a;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            background: #2e7d64;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #2e7d64;
+        }
+
+        .panel-header-right span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #8aa4b5;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Profile card dengan gaya berbeda: stacked horizontal */
+        .profile-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .feed-item {
+            background: #0c141c;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid #1e2f38;
+            transition: 0.15s linear;
+        }
+
+        .feed-item:hover {
+            border-color: #2e7d64;
+            background: #0f1a22;
+        }
+
+        .feed-icon {
+            width: 42px;
+            height: 42px;
+            background: #11212b;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #6ee7b7;
+        }
+
+        .feed-content {
+            flex: 1;
+        }
+
+        .feed-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #5d8b9e;
+            letter-spacing: 1px;
+        }
+
+        .feed-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #e2f0f5;
+            margin-top: 0.2rem;
+            word-break: break-word;
+        }
+
+        /* loading style berbeda */
+        .loading-feed {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            gap: 1rem;
+        }
+
+        .pulse-ring {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid #2e7d64;
+            border-top: 2px solid transparent;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-feed p {
+            color: #5d8b9e;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* error style */
+        .error-feed {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #1e262f;
+            padding: 1.2rem;
+            border-radius: 1.2rem;
+            border-left: 4px solid #e06c75;
+            color: #e6b9c0;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #3f6b7c;
+        }
+
+        @media (max-width: 880px) {
+            .split-dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="split-dashboard">
+    <!-- LEFT PANEL: Terminal style command -->
+    <div class="command-panel">
+        <div class="badge-system">⚡ ASYNC ENGINE v2</div>
+        <h2>Profile<span style="color:#6ee7b7">Fetcher</span></h2>
+        <div class="command-desc">
+            Sistem pengambilan data dengan metode AJAX modern.<br>
+            Klik tombol di bawah untuk melakukan request ke server.
+        </div>
+
+        <button id="syncButton" class="terminal-btn">
+            <span>📡 FETCH DATA SEQUENCE</span>
+            <span class="btn-icon">⤴</span>
+        </button>
+
+        <div class="info-stats">
+            <div class="stat-row">
+                <span class="stat-label">METODE</span>
+                <span class="stat-value">Fetch API + Async/Await</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">RESPONSE TYPE</span>
+                <span class="stat-value">application/json</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">STATUS</span>
+                <span class="stat-value">Ready to sync</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: Hasil dengan layout feed unik -->
+    <div class="result-panel">
+        <div class="panel-header-right">
+            <div class="indicator-dot"></div>
+            <span>Live Data Stream</span>
+        </div>
+        <div id="dynamicFeedArea">
+            <!-- empty state modern -->
+            <div class="empty-state">
+                <div style="font-size:2rem; margin-bottom:0.5rem">⛁</div>
+                <p>Belum ada data ditarik</p>
+                <small style="color:#2e5a5f">Tekan tombol di panel kiri</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const fetchBtn = document.getElementById('syncButton');
+    const feedContainer = document.getElementById('dynamicFeedArea');
+
+    // Fungsi loading dengan animasi berbeda
+    function showLoadingState() {
+        feedContainer.innerHTML = `
+            <div class="loading-feed">
+                <div class="pulse-ring"></div>
+                <p>menghubungkan ke server ...</p>
+                <small style="font-size:0.7rem; color:#2e5a5f">request asyncronous</small>
+            </div>
+        `;
+    }
+
+    // Fungsi menampilkan error dengan gaya berbeda
+    function showErrorState(message) {
+        feedContainer.innerHTML = `
+            <div class="error-feed">
+                <span style="font-size:1.5rem;">⚠️</span>
+                <div>
+                    <strong style="color:#e06c75">Gagal sinkronisasi</strong><br>
+                    <span style="font-size:0.8rem;">${message}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    // Fungsi render data profil dengan layout feed / timeline horizontal
+    function renderProfileData(profile) {
+        // layout unik : data ditampilkan seperti feed timeline modern
+        feedContainer.innerHTML = `
+            <div class="profile-feed">
+                <div class="feed-item">
+                    <div class="feed-icon">🧑‍💻</div>
+                    <div class="feed-content">
+                        <div class="feed-label">IDENTITAS</div>
+                        <div class="feed-value">${escapeHtml(profile.nama)}</div>
+                    </div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-icon">🏢</div>
+                    <div class="feed-content">
+                        <div class="feed-label">KARIR / BIDANG</div>
+                        <div class="feed-value">${escapeHtml(profile.pekerjaan)}</div>
+                    </div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-icon">🌍</div>
+                    <div class="feed-content">
+                        <div class="feed-label">LOKASI AKTIF</div>
+                        <div class="feed-value">${escapeHtml(profile.lokasi)}</div>
+                    </div>
+                </div>
+                <div class="feed-item" style="opacity:0.7">
+                    <div class="feed-icon">⏱️</div>
+                    <div class="feed-content">
+                        <div class="feed-label">LAST SYNC</div>
+                        <div class="feed-value">${new Date().toLocaleTimeString('id-ID')}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Simple XSS protection
+    function escapeHtml(str) {
+        if (!str) return '—';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Event handler menggunakan async/await
+    fetchBtn.addEventListener('click', async () => {
+        showLoadingState();
+
+        try {
+            const response = await fetch('data.php', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Cache-Control': 'no-cache'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server merespons dengan status ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (!result.nama || !result.pekerjaan || !result.lokasi) {
+                throw new Error('Data yang diterima tidak sesuai format');
+            }
+
+            renderProfileData(result);
+
+        } catch (error) {
+            console.error('Fetch error:', error);
+            showErrorState(error.message);
+        }
+    });
+</script>
+
+</body>
+</html>
