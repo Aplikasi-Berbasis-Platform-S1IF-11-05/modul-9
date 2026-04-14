@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil Karyawan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <h2>Daftar Profil Karyawan</h2>
+
+        <button id="btnLoad">Ambil Data</button>
+
+        <div id="output-data"></div>
+    </div>
+
+    <script>
+        document.getElementById("btnLoad").addEventListener("click", loadProfil);
+
+        function loadProfil() {
+            fetch('profil_api.php')
+                .then(res => res.json())
+                .then(result => {
+                    let tampil = "";
+
+                    result.forEach(data => {
+                        tampil += `
+                            <div class="box">
+                                <p><strong>${data.nama}</strong></p>
+                                <p>${data.pekerjaan}</p>
+                                <span>${data.lokasi}</span>
+                            </div>
+                        `;
+                    });
+
+                    document.getElementById("output-data").innerHTML = tampil;
+                })
+                .catch(err => console.log(err));
+        }
+    </script>
+
+</body>
+</html>
