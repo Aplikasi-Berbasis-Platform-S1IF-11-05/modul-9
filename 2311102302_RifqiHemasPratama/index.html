@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Modul 10 - AJAX</title>
+    <link rel="stylesheet" href="style.css">
+
+    
+</head>
+<body>
+
+    <h2>Aplikasi AJAX Sederhana</h2>
+    
+    <button id="btn-tampil">Tampilkan Profil</button>
+    
+    <div id="hasil-profil"></div>
+
+    <script>
+        const btnTampil = document.getElementById('btn-tampil');
+        const hasilProfil = document.getElementById('hasil-profil');
+
+        btnTampil.addEventListener('click', function() {
+
+            btnTampil.textContent = 'Memuat...';
+
+            fetch('data.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Jaringan bermasalah');
+                    }
+                    return response.json(); 
+                })
+                .then(data => {
+                    hasilProfil.style.display = 'block';
+
+                    hasilProfil.innerHTML = `Nama: ${data.nama} | Pekerjaan: ${data.pekerjaan} | Lokasi: ${data.lokasi}`;
+
+                    btnTampil.textContent = 'Tampilkan Profil';
+                })
+                .catch(error => {
+                    console.error('Ada masalah dengan fetch operation:', error);
+                    hasilProfil.style.display = 'block';
+                    hasilProfil.innerHTML = 'Gagal mengambil data dari server.';
+                    btnTampil.textContent = 'Tampilkan Profil';
+                });
+        });
+    </script>
+
+</body>
+</html>
