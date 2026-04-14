@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil AJAX</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .judul {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 300px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+        }
+
+        button {
+            background: #4facfe;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #007bff;
+        }
+
+        #hasil-profil {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .loading {
+            color: gray;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Judul Atas -->
+        <div class="judul">MODUL AJAX</div>
+
+        <!-- Card -->
+        <div class="card">
+            <h2> Profil Pengguna</h2>
+
+            <button id="btnProfil">Tampilkan Profil</button>
+
+            <div id="hasil-profil"></div>
+        </div>
+    </div>
+
+    <script>
+        const tombol = document.getElementById("btnProfil");
+
+        tombol.addEventListener("click", function() {
+            const hasil = document.getElementById("hasil-profil");
+
+            hasil.innerHTML = "<p class='loading'>Loading...</p>";
+
+            fetch("data.php")
+                .then(response => response.json())
+                .then(data => {
+                    hasil.innerHTML = `
+                        <p><b>Nama:</b> ${data.nama}</p>
+                        <p><b>Pekerjaan:</b> ${data.pekerjaan}</p>
+                        <p><b>Lokasi:</b> ${data.lokasi}</p>
+                    `;
+                })
+                .catch(error => {
+                    hasil.innerHTML = "<p style='color:red;'>Gagal mengambil data</p>";
+                });
+        });
+    </script>
+
+</body>
+</html>
