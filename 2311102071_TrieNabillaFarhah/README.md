@@ -179,8 +179,8 @@ echo json_encode($data);
 ?>
 ``` 
 ### Screenshot Output
-<img src="Output1.png" alt="Keterangan Foto" width="100%">
-<img src="output2.png" alt="Keterangan Foto" width="100%">
+<img src="profil1.png" alt="Keterangan Foto" width="100%">
+<img src="profil2.png" alt="Keterangan Foto" width="100%">
 
 ### Penjelasan Code
 
