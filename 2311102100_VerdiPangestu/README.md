@@ -74,18 +74,18 @@ DOM adalah antarmuka pemrograman untuk dokumen HTML. Melalui JavaScript, elemen-
 
 ```php
 <?php
-// Memberitahu browser dan client bahwa tipe data yang dikirim adalah JSON
+// Memberitahu browser bahwa konten yang dikirim adalah JSON
 header('Content-Type: application/json');
 
-// Membuat array berisi data profil
-$data_profil = [
+// Data sederhana dalam bentuk Array
+$data = [
     'nama' => 'Budi',
     'pekerjaan' => 'Web Developer',
     'lokasi' => 'Jakarta'
 ];
 
 // Mengubah array PHP menjadi format JSON dan menampilkannya
-echo json_encode($data_profil);
+echo json_encode($data);
 ?>
 ```
 
@@ -156,24 +156,7 @@ echo json_encode($data_profil);
 </body>
 </html>
 ```
-## Code data.php
-```PHP
-<?php
-// Memberitahu browser bahwa konten yang dikirim adalah JSON
-header('Content-Type: application/json');
-
-// Data sederhana dalam bentuk Array
-$data = [
-    'nama' => 'Budi',
-    'pekerjaan' => 'Web Developer',
-    'lokasi' => 'Jakarta'
-];
-
-// Mengubah array PHP menjadi format JSON dan menampilkannya
-echo json_encode($data);
-?>
-```
 
 ## Output
 
-<img width="1919" height="967" alt="Screenshot 2026-04-10 221527" src="https://github.com/user-attachments/assets/47f02f38-d759-4919-babb-37309d47cc90" />
+<img width="1919" height="972" alt="Cuplikan layar 2026-04-14 172230" src="https://github.com/user-attachments/assets/c729e067-6923-4042-a6f1-923237d4606d" />
