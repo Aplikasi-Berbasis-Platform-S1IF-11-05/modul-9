@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX Profile Loader - Modul 10</title>
+    <meta name="description" content="Tugas Modul 10 - Implementasi AJAX menggunakan Fetch API untuk mengambil data profil tanpa reload.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #ec4899;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-gray: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Elements */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            filter: blur(120px);
+            border-radius: 50%;
+            top: 20%;
+            left: 20%;
+            opacity: 0.2;
+            z-index: -1;
+            animation: move 10s infinite alternate;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            filter: blur(120px);
+            border-radius: 50%;
+            bottom: 20%;
+            right: 20%;
+            opacity: 0.2;
+            z-index: -1;
+            animation: move 15s infinite alternate-reverse;
+        }
+
+        @keyframes move {
+            from { transform: translate(0, 0); }
+            to { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+            box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        #hasil-profil {
+            margin-top: 30px;
+            min-height: 20px;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        #hasil-profil.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .profil-data {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px dashed var(--glass-border);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--primary-light);
+            font-weight: 500;
+        }
+
+        .profil-data b {
+            color: white;
+            font-weight: 700;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h1>Profil Karyawan</h1>
+            <p class="subtitle">Modul 10 - AJAX Data Fetching</p>
+            
+            <button id="btn-tampil" class="btn-primary">
+                <span class="btn-text">Tampilkan Profil</span>
+                <div class="spinner" id="loader"></div>
+            </button>
+
+            <div id="hasil-profil">
+                <!-- Data will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Kartika Pringgo Hutomo - 2311102196
+    </footer>
+
+    <script>
+        document.getElementById('btn-tampil').addEventListener('click', function() {
+            const btnText = document.querySelector('.btn-text');
+            const loader = document.getElementById('loader');
+            const hasilDiv = document.getElementById('hasil-profil');
+
+            // Feedback Visual: Loading
+            btnText.textContent = 'Memuat...';
+            loader.style.display = 'block';
+
+            // Mengambil data dari data.php menggunakan Fetch API
+            fetch('data.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Gagal mengambil data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Update UI dengan data yang diterima
+                    hasilDiv.innerHTML = `
+                        <div class="profil-data">
+                            Nama: <b>${data.nama}</b> | 
+                            Pekerjaan: <b>${data.pekerjaan}</b> | 
+                            Lokasi: <b>${data.lokasi}</b>
+                        </div>
+                    `;
+                    
+                    // Reset Button
+                    btnText.textContent = 'Tampilkan Profil';
+                    loader.style.display = 'none';
+
+                    // Tampilkan div dengan animasi
+                    hasilDiv.classList.add('visible');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    hasilDiv.innerHTML = `<div class="profil-data" style="color: #ef4444;">Error: ${error.message}</div>`;
+                    hasilDiv.classList.add('visible');
+                    btnText.textContent = 'Coba Lagi';
+                    loader.style.display = 'none';
+                });
+        });
+    </script>
+</body>
+</html>
