@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AJAX Profil</title>
+</head>
+<body>
+
+<h2>Profil</h2>
+
+<button onclick="ambilData()">Tampilkan Profil</button>
+
+<div id="hasil-profil"></div>
+
+<script>
+function ambilData() {
+    fetch('data.php')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("hasil-profil").innerHTML =
+                "Nama: " + data.nama +
+                " | Pekerjaan: " + data.pekerjaan +
+                " | Lokasi: " + data.lokasi;
+        })
+        .catch(error => {
+            console.log("Error:", error);
+        });
+}
+</script>
+
+</body>
+</html>
