@@ -509,10 +509,6 @@ echo json_encode($data);
 </body>
 </html>
 ```
-
-**Kode Lengkap:**
-
-
 ### Penjelasan
 
 Ajax Profil Viewer adalah halaman web yang mengambil data profil (nama, pekerjaan, lokasi) dari server PHP menggunakan fetch() secara asinkron saat tombol "Tampilkan Profil" diklik. Data kemudian ditampilkan langsung di halaman tanpa perlu reload, dilengkapi dengan animasi loading dan desain glassmorphism modern.
