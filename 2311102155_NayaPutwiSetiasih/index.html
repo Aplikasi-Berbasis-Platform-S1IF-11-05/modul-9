@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Profil Pengguna</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 15px;
+    width: 350px;
+    text-align: center;
+    color: #333;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* BUTTON */
+button {
+    margin-top: 15px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    background: #4da6ff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #3399ff;
+    transform: scale(1.05);
+}
+
+/* LOADING */
+.loading {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* HASIL */
+#hasil-profil {
+    margin-top: 20px;
+    display: none;
+}
+
+/* ITEM */
+.profil-item {
+    background: white;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    animation: fadeIn 0.4s ease forwards;
+    transform: translateY(10px);
+    opacity: 0;
+}
+
+/* ANIMASI */
+@keyframes fadeIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>👤 Profil Pengguna</h2>
+
+    <button id="btn">Tampilkan Data</button>
+
+    <div class="loading" id="loading"></div>
+
+    <div id="hasil-profil"></div>
+</div>
+
+<script>
+const btn = document.getElementById('btn');
+const hasil = document.getElementById('hasil-profil');
+const loading = document.getElementById('loading');
+
+btn.addEventListener('click', () => {
+    btn.disabled = true;
+
+    loading.innerText = "⏳ Mengambil data...";
+    hasil.style.display = "none";
+
+    fetch('data.php')
+        .then(res => res.json())
+        .then(data => {
+            loading.innerText = "";
+            hasil.innerHTML = "";
+            hasil.style.display = "block";
+
+            data.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.classList.add('profil-item');
+                div.style.animationDelay = `${index * 0.2}s`;
+
+                div.innerHTML = `
+                    👤 <b>${item.nama}</b><br>
+                    💼 ${item.pekerjaan}<br>
+                    📍 ${item.lokasi}
+                `;
+
+                hasil.appendChild(div);
+            });
+
+            btn.disabled = false;
+        })
+        .catch(() => {
+            loading.innerText = "❌ Gagal mengambil data";
+            btn.disabled = false;
+        });
+});
+</script>
+
+</body>
+</html>
